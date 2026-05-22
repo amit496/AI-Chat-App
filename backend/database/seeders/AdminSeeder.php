@@ -10,9 +10,9 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         Admin::updateOrCreate(
-            ['email' => 'admin@voxera.test'],
+            ['email' => 'admin@zynthio.test'],
             [
-                'name' => 'Voxera Admin',
+                'name' => 'Zynthio Admin',
                 'password' => 'password',
             ]
         );

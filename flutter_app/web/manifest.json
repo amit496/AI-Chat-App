@@ -1,6 +1,6 @@
 {
-    "name": "Voxera",
-    "short_name": "Voxera",
+    "name": "Zynthio",
+    "short_name": "Zynthio",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

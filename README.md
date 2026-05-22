@@ -1,28 +1,16 @@
-# Voxera — AI Chat App
+# Zynthio — AI Chat App
 
-Original portfolio brand. Flutter + Laravel + Gemini.
+Invented portfolio brand (not Voxera / NovaAI). Flutter + Laravel + Gemini.
 
 | Item | Value |
 |------|--------|
-| **App name** | Voxera |
-| **Tagline** | Speak. Chat. Create. |
-| **Theme** | Indigo |
-| **Admin** | `admin@voxera.test` / `password` |
+| App name | **Zynthio** |
+| Tagline | Smart. Clear. Chat. |
+| Admin | `admin@zynthio.test` / `password` |
 
 ## Run
 
 ```bash
-# Backend
-cd backend && php artisan config:clear && php artisan serve --port=8081
-
-# Flutter
+cd backend && php artisan serve --port=8081
 cd flutter_app && flutter clean && flutter pub get && flutter run
 ```
-
-Admin: http://127.0.0.1:8081/admin
-
-## Docs
-
-- [Firebase](docs/FIREBASE_SETUP.md)
-- [Deploy](docs/DEPLOY.md)
-- [Rebrand](docs/REBRAND.md)

@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Voxera (Android Emulator)",
+      "name": "Zynthio (Android Emulator)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -11,7 +11,7 @@
       ]
     },
     {
-      "name": "Voxera (Physical Device — change IP)",
+      "name": "Zynthio (Physical Device — change IP)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",

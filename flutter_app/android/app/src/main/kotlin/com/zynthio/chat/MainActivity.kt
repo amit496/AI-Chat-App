@@ -1,4 +1,4 @@
-package com.voxera.chat
+package com.zynthio.chat
 
 import io.flutter.embedding.android.FlutterActivity
 

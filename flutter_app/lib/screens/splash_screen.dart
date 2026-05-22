@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core/constants/app_strings.dart';
 import '../providers/auth_provider.dart';
 import '../routes/app_routes.dart';
 import '../services/storage_service.dart';
@@ -30,7 +29,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     await Future<void>.delayed(const Duration(seconds: 2));
     if (!mounted) return;
     final auth = context.read<AuthProvider>();
-    await auth.bootstrap();
+    try {
+      await auth.bootstrap();
+    } catch (_) {
+      await auth.logout();
+    }
     if (!mounted) return;
     final onboardingDone = await StorageService().isOnboardingDone();
     if (!mounted) return;
@@ -60,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               const SizedBox(height: 8),
               Text(BrandConfig.tagline, style: Theme.of(context).textTheme.bodyMedium),
               const SizedBox(height: 32),
-              const CircularProgressIndicator(),
+              CircularProgressIndicator(color: BrandConfig.primary.withValues(alpha: 0.7)),
             ],
           ),
         ),

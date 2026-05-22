@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:intl/intl.dart';
 
+import '../core/constants/brand_config.dart';
 import '../models/message_model.dart';
 
 class MessageBubble extends StatefulWidget {
@@ -72,8 +73,8 @@ class _MessageBubbleState extends State<MessageBubble> {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: isUser
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.surfaceContainerHighest,
+                ? BrandConfig.primary
+                : BrandConfig.primaryLight,
             borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(18),
               topRight: const Radius.circular(18),
@@ -101,9 +102,7 @@ class _MessageBubbleState extends State<MessageBubble> {
               Text(
                 _displayText,
                 style: TextStyle(
-                  color: isUser
-                      ? Theme.of(context).colorScheme.onPrimary
-                      : Theme.of(context).colorScheme.onSurface,
+                  color: isUser ? Colors.white : BrandConfig.textPrimary,
                 ),
               ),
               const SizedBox(height: 6),
@@ -114,8 +113,8 @@ class _MessageBubbleState extends State<MessageBubble> {
                     time,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: isUser
-                              ? Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.8)
-                              : null,
+                              ? Colors.white.withValues(alpha: 0.75)
+                              : BrandConfig.textSecondary,
                         ),
                   ),
                   if (!isUser && _typingDone) ...[

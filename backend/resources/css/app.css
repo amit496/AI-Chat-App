@@ -10,11 +10,11 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-/* React admin (Blade view: admin.blade.php) */
+/* Zynthio — soft, eye-friendly admin & welcome */
 .admin-body {
     margin: 0;
-    background: #0f172a;
-    color: #e8eaed;
+    background: #f5f6fa;
+    color: #2d3142;
     font-family: var(--font-sans);
 }
 
@@ -27,11 +27,13 @@
 
 .login-card {
     max-width: 420px;
-    background: #1a1d27;
+    background: #ffffff;
+    border: 1px solid #e2e6ef;
     border-radius: 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    box-shadow: 0 8px 24px rgba(45, 49, 66, 0.06);
 }
 
 .login-card input {
@@ -39,8 +41,8 @@
     margin-top: 6px;
     padding: 10px;
     border-radius: 10px;
-    border: 1px solid #333;
-    background: #0f1117;
+    border: 1px solid #e2e6ef;
+    background: #f5f6fa;
     color: inherit;
 }
 
@@ -51,9 +53,14 @@
     border-radius: 10px;
     padding: 10px 14px;
     cursor: pointer;
-    background: #6366f1;
+    background: #7c8db5;
     color: white;
     font-weight: 600;
+}
+
+.login-card button:hover,
+.dash-header button:hover {
+    background: #6b7ca3;
 }
 
 .dash-header {
@@ -69,11 +76,13 @@
 }
 
 .tabs button {
-    background: #2a2f3d;
+    background: #e8ecf4;
+    color: #2d3142;
 }
 
 .tabs button.active {
-    background: #6366f1;
+    background: #7c8db5;
+    color: white;
 }
 
 .stats-grid {
@@ -83,7 +92,8 @@
 }
 
 .stat-card {
-    background: #1a1d27;
+    background: #ffffff;
+    border: 1px solid #e2e6ef;
     border-radius: 14px;
     padding: 16px;
 }
@@ -91,7 +101,8 @@
 table {
     width: 100%;
     border-collapse: collapse;
-    background: #1a1d27;
+    background: #ffffff;
+    border: 1px solid #e2e6ef;
     border-radius: 12px;
 }
 
@@ -99,11 +110,11 @@ th,
 td {
     padding: 10px 12px;
     text-align: left;
-    border-bottom: 1px solid #2a2f3d;
+    border-bottom: 1px solid #e2e6ef;
 }
 
 .error {
-    color: #ff6b6b;
+    color: #c45c5c;
 }
 
 .welcome {

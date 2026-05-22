@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: voxera-api
+    name: zynthio-api
     runtime: php
     plan: free
     rootDir: backend

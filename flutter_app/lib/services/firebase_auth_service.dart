@@ -9,19 +9,27 @@ import 'auth_service.dart';
 class FirebaseAuthService {
   FirebaseAuthService({AuthService? auth, FirebaseAuth? firebaseAuth})
       : _auth = auth ?? AuthService(),
-        _firebase = firebaseAuth ?? FirebaseAuth.instance;
+        _firebaseAuth = firebaseAuth;
 
   final AuthService _auth;
-  final FirebaseAuth _firebase;
+  final FirebaseAuth? _firebaseAuth;
 
   static bool get isReady => DefaultFirebaseOptions.isConfigured;
+
+  FirebaseAuth get _firebase {
+    if (_firebaseAuth != null) return _firebaseAuth!;
+    if (!isReady) {
+      throw FirebaseAuthException(
+        code: 'firebase-not-configured',
+        message: 'Run flutterfire configure first.',
+      );
+    }
+    return FirebaseAuth.instance;
+  }
 
   String? _verificationId;
 
   Future<void> signInWithGoogle() async {
-    if (!isReady) {
-      throw FirebaseAuthException(code: 'firebase-not-configured', message: 'Run flutterfire configure first.');
-    }
     final google = GoogleSignIn();
     final account = await google.signIn();
     if (account == null) {
@@ -40,9 +48,6 @@ class FirebaseAuthService {
   }
 
   Future<void> sendOtp(String phone) async {
-    if (!isReady) {
-      throw FirebaseAuthException(code: 'firebase-not-configured', message: 'Run flutterfire configure first.');
-    }
     final normalized = phone.startsWith('+') ? phone : '+91$phone';
     final completer = Completer<void>();
 

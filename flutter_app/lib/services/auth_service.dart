@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../firebase_options.dart';
 import '../models/user_model.dart';
 import '../utils/api_helper.dart';
 import 'api_client.dart';
@@ -12,11 +13,17 @@ class AuthService {
     FirebaseAuth? firebaseAuth,
   })  : _api = api ?? ApiClient(),
         _storage = storage ?? StorageService(),
-        _firebase = firebaseAuth ?? FirebaseAuth.instance;
+        _firebaseAuth = firebaseAuth;
 
   final ApiClient _api;
   final StorageService _storage;
-  final FirebaseAuth _firebase;
+  final FirebaseAuth? _firebaseAuth;
+
+  FirebaseAuth? get _firebase {
+    if (_firebaseAuth != null) return _firebaseAuth;
+    if (!DefaultFirebaseOptions.isConfigured) return null;
+    return FirebaseAuth.instance;
+  }
 
   Future<UserModel> register({
     required String name,
@@ -59,7 +66,11 @@ class AuthService {
   }
 
   Future<void> sendPasswordReset(String email) async {
-    await _firebase.sendPasswordResetEmail(email: email.trim());
+    final fb = _firebase;
+    if (fb == null) {
+      throw StateError('Firebase is not configured. Use email/password login.');
+    }
+    await fb.sendPasswordResetEmail(email: email.trim());
   }
 
   Future<UserModel?> fetchProfile() async {
@@ -71,7 +82,7 @@ class AuthService {
     try {
       await _api.post('/logout');
     } catch (_) {}
-    await _firebase.signOut();
+    await _firebase?.signOut();
     await _storage.clearToken();
   }
 

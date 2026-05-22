@@ -34,13 +34,25 @@ class AppLogo extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(_imageSize * 0.22),
-          child: Image.asset(
-            BrandConfig.logoAsset,
-            width: _imageSize,
-            height: _imageSize,
-            fit: BoxFit.cover,
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(_imageSize * 0.24),
+            boxShadow: [
+              BoxShadow(
+                color: BrandConfig.primary.withValues(alpha: 0.18),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(_imageSize * 0.24),
+            child: Image.asset(
+              BrandConfig.logoAsset,
+              width: _imageSize,
+              height: _imageSize,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         if (showName) ...[

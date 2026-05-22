@@ -23,7 +23,7 @@ async function request(path, options = {}) {
 }
 
 function LoginForm({ onSuccess }) {
-    const [email, setEmail] = useState('admin@voxera.test');
+    const [email, setEmail] = useState('admin@zynthio.test');
     const [password, setPassword] = useState('password');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);

@@ -1,5 +1,5 @@
 name: nova_ai_chat
-description: Voxera — original AI chat app (Flutter + Laravel + Gemini).
+description: Zynthio — original AI chat app (Flutter + Laravel + Gemini).
 publish_to: 'none'
 version: 1.0.0+1
 
