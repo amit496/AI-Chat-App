@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
-import '../core/constants/brand_config.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
+import '../core/constants/brand_config.dart';
+import '../core/theme/app_theme.dart';
+import 'image_attach_sheet.dart';
+
+/// ChatGPT-style bottom composer: one rounded bar + attach + send.
 class ChatInputBar extends StatefulWidget {
   const ChatInputBar({
     super.key,
@@ -32,31 +34,24 @@ class _ChatInputBarState extends State<ChatInputBar> {
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 70);
-    if (picked != null) {
-      setState(() => _image = File(picked.path));
-    }
+  Future<void> _attachImage() async {
+    final file = await showImageAttachSheet(context);
+    if (file != null) setState(() => _image = file);
   }
 
   Future<void> _toggleVoice() async {
     if (!_listening) {
-      final available = await _speech.initialize();
-      if (!available) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Voice input not available on this device')),
-          );
-        }
+      final ok = await _speech.initialize();
+      if (!ok && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Voice not available')),
+        );
         return;
       }
       setState(() => _listening = true);
       await _speech.listen(
-        onResult: (result) {
-          _controller.text = result.recognizedWords;
-          _controller.selection = TextSelection.fromPosition(
-            TextPosition(offset: _controller.text.length),
-          );
+        onResult: (r) {
+          _controller.text = r.recognizedWords;
         },
       );
     } else {
@@ -67,6 +62,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   void _submit() {
     if (!widget.enabled) return;
+    if (_controller.text.trim().isEmpty && _image == null) return;
     widget.onSend(_controller.text, _image);
     _controller.clear();
     setState(() => _image = null);
@@ -78,58 +74,99 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   @override
   Widget build(BuildContext context) {
+    final fill = AppTheme.inputFill(context);
+    final border = AppTheme.isDark(context) ? BrandConfig.darkBorder : BrandConfig.lightBorder;
+
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (_image != null)
-              Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.file(_image!, width: 56, height: 56, fit: BoxFit.cover),
-                  ),
-                  IconButton(
-                    onPressed: () => setState(() => _image = null),
-                    icon: const Icon(Icons.close),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(_image!, width: 48, height: 48, fit: BoxFit.cover),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.close, size: 20),
+                      onPressed: () => setState(() => _image = null),
+                    ),
+                  ],
+                ),
+              ),
+            Container(
+              constraints: const BoxConstraints(maxWidth: 768),
+              decoration: BoxDecoration(
+                color: fill,
+                borderRadius: BorderRadius.circular(26),
+                border: Border.all(color: border),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: widget.enabled ? _pickImage : null,
-                  icon: const Icon(Icons.image_outlined),
-                ),
-                IconButton(
-                  onPressed: widget.enabled ? _toggleVoice : null,
-                  icon: Icon(_listening ? Icons.mic : Icons.mic_none),
-                  color: _listening ? Theme.of(context).colorScheme.primary : null,
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    enabled: widget.enabled,
-                    minLines: 1,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      hintText: BrandConfig.chatHint,
-                      filled: true,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                    onSubmitted: (_) => _submit(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.add, size: 22),
+                    color: AppTheme.textMuted(context),
+                    onPressed: widget.enabled ? _attachImage : null,
                   ),
-                ),
-                const SizedBox(width: 8),
-                FilledButton(
-                  onPressed: widget.enabled ? _submit : null,
-                  style: FilledButton.styleFrom(shape: const CircleBorder(), padding: const EdgeInsets.all(14)),
-                  child: const Icon(Icons.send_rounded, size: 20),
-                ),
-              ],
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      enabled: widget.enabled,
+                      minLines: 1,
+                      maxLines: 8,
+                      style: TextStyle(color: AppTheme.textPrimary(context), fontSize: 15),
+                      decoration: InputDecoration(
+                        hintText: BrandConfig.chatHint,
+                        hintStyle: TextStyle(color: AppTheme.textMuted(context)),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      onSubmitted: (_) => _submit(),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(_listening ? Icons.mic : Icons.mic_none, size: 22),
+                    color: _listening ? BrandConfig.accent : AppTheme.textMuted(context),
+                    onPressed: widget.enabled ? _toggleVoice : null,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6, bottom: 6),
+                    child: Material(
+                      color: widget.enabled ? BrandConfig.accent : BrandConfig.lightBorder,
+                      borderRadius: BorderRadius.circular(20),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: widget.enabled ? _submit : null,
+                        child: const SizedBox(
+                          width: 36,
+                          height: 36,
+                          child: Icon(Icons.arrow_upward, color: Colors.white, size: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Zynthio can make mistakes. Check important info.',
+              style: TextStyle(fontSize: 11, color: AppTheme.textMuted(context)),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

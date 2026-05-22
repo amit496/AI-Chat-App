@@ -13,8 +13,7 @@ import 'screens/auth/forgot_password_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/otp_login_screen.dart';
 import 'screens/auth/register_screen.dart';
-import 'screens/chat/chat_screen.dart';
-import 'screens/home/home_screen.dart';
+import 'screens/shell/chat_shell_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
@@ -57,8 +56,8 @@ class NovaApp extends StatelessWidget {
               AppRoutes.register: (_) => const RegisterScreen(),
               AppRoutes.forgotPassword: (_) => const ForgotPasswordScreen(),
               AppRoutes.otpLogin: (_) => const OtpLoginScreen(),
-              AppRoutes.home: (_) => const HomeScreen(),
-              AppRoutes.chat: (_) => const ChatScreen(),
+              AppRoutes.home: (_) => const ChatShellScreen(),
+              AppRoutes.chat: (_) => const ChatShellScreen(),
               AppRoutes.profile: (_) => const ProfileScreen(),
               AppRoutes.settings: (_) => const SettingsScreen(),
             },

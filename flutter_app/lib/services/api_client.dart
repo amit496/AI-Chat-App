@@ -41,11 +41,23 @@ class ApiClient {
   }
 
   Future<void> _ensureOnline() async {
-    final result = await Connectivity().checkConnectivity();
-    if (result.contains(ConnectivityResult.none)) {
-      throw const ApiException(AppStrings.noInternet);
+    try {
+      final result = await Connectivity().checkConnectivity();
+      final hasNetwork = result.any(
+        (r) => r != ConnectivityResult.none && r != ConnectivityResult.bluetooth,
+      );
+      if (!hasNetwork && result.isNotEmpty) {
+        throw const ApiException(AppStrings.noInternet);
+      }
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      // If connectivity plugin fails, still try the API request.
     }
   }
+
+  ApiException _connectionError() => ApiException(
+        '${AppStrings.serverUnreachable}\n(${AppConfig.apiBaseUrl})',
+      );
 
   Future<dynamic> get(String path, {bool auth = true}) async {
     await _ensureOnline();
@@ -55,9 +67,9 @@ class ApiClient {
           .timeout(const Duration(seconds: 30));
       return _handleResponse(response);
     } on SocketException {
-      throw const ApiException(AppStrings.noInternet);
+      throw _connectionError();
     } on TimeoutException {
-      throw const ApiException(AppStrings.somethingWrong);
+      throw _connectionError();
     }
   }
 
@@ -74,12 +86,12 @@ class ApiClient {
             headers: await _headers(auth: auth),
             body: body == null ? null : jsonEncode(body),
           )
-          .timeout(const Duration(seconds: 30));
+          .timeout(path == '/send-message' ? const Duration(seconds: 90) : const Duration(seconds: 30));
       return _handleResponse(response);
     } on SocketException {
-      throw const ApiException(AppStrings.noInternet);
+      throw _connectionError();
     } on TimeoutException {
-      throw const ApiException(AppStrings.somethingWrong);
+      throw _connectionError();
     }
   }
 
@@ -91,9 +103,9 @@ class ApiClient {
           .timeout(const Duration(seconds: 30));
       return _handleResponse(response);
     } on SocketException {
-      throw const ApiException(AppStrings.noInternet);
+      throw _connectionError();
     } on TimeoutException {
-      throw const ApiException(AppStrings.somethingWrong);
+      throw _connectionError();
     }
   }
 
@@ -116,9 +128,9 @@ class ApiClient {
       final response = await http.Response.fromStream(streamed);
       return _handleResponse(response);
     } on SocketException {
-      throw const ApiException(AppStrings.noInternet);
+      throw _connectionError();
     } on TimeoutException {
-      throw const ApiException(AppStrings.somethingWrong);
+      throw _connectionError();
     }
   }
 
@@ -141,8 +153,9 @@ class ApiClient {
       return json ?? <String, dynamic>{};
     }
 
-    final message = json?['message']?.toString() ??
-        (response.statusCode == 502 ? AppStrings.somethingWrong : AppStrings.somethingWrong);
+    final message = json?['error']?.toString() ??
+        json?['message']?.toString() ??
+        AppStrings.somethingWrong;
     throw ApiException(message, statusCode: response.statusCode);
   }
 }

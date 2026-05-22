@@ -10,8 +10,8 @@ class AppConfig {
   /// Override: `--dart-define=API_BASE_URL=http://10.0.2.2:8081/api`
   static const String _envApiUrl = String.fromEnvironment('API_BASE_URL');
 
-  /// Laravel port (match `php artisan serve --port=XXXX`)
-  static const int backendPort = 8081;
+  /// Must match `php artisan serve` port (default 8000, or `--port=8081`)
+  static const int backendPort = 8000;
 
   static String get apiBaseUrl {
     if (_envApiUrl.isNotEmpty) return _envApiUrl;

@@ -15,7 +15,7 @@ class GeminiService
     public function chat(array $history, string $userMessage, ?string $imageBase64 = null): array
     {
         $apiKey = config('services.gemini.api_key');
-        $model = config('services.gemini.model', 'gemini-2.0-flash');
+        $model = config('services.gemini.model', 'gemini-2.5-flash');
 
         if (empty($apiKey)) {
             throw new \RuntimeException('Gemini API key is not configured.');
@@ -50,15 +50,23 @@ class GeminiService
 
         $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent";
 
-        $response = Http::timeout(60)
-            ->retry(2, 500)
-            ->post("{$url}?key={$apiKey}", [
-                'contents' => $contents,
-            ]);
+        $response = $this->callGemini($url, $apiKey, $contents);
+
+        if ($response->failed() && $response->status() === 429 && $model !== 'gemini-2.5-flash') {
+            $fallbackUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+            $response = $this->callGemini($fallbackUrl, $apiKey, $contents);
+            $model = 'gemini-2.5-flash';
+        }
 
         if ($response->failed()) {
+            $apiError = $response->json('error.message')
+                ?? $response->json('error.status')
+                ?? $response->body();
+
             throw new \RuntimeException(
-                $response->json('error.message') ?? 'Gemini API request failed.'
+                is_string($apiError) && $apiError !== ''
+                    ? "Gemini API: {$apiError}"
+                    : 'Gemini API request failed.'
             );
         }
 
@@ -98,6 +106,15 @@ class GeminiService
         ]);
     }
 
+    private function callGemini(string $url, string $apiKey, array $contents): \Illuminate\Http\Client\Response
+    {
+        return Http::timeout(60)
+            ->retry(2, 500)
+            ->post("{$url}?key={$apiKey}", [
+                'contents' => $contents,
+            ]);
+    }
+
     private function isDemoKey(string $apiKey): bool
     {
         return str_contains($apiKey, 'Dummy') || str_contains($apiKey, 'REPLACE');
@@ -105,7 +122,7 @@ class GeminiService
 
     private function demoResponse(string $userMessage): array
     {
-        $model = config('services.gemini.model', 'gemini-2.0-flash');
+        $model = config('services.gemini.model', 'gemini-2.5-flash');
 
         return [
             'text' => "[Demo mode — replace GEMINI_API_KEY in .env]\n\nYou said: \"{$userMessage}\"\n\nThis is a sample Zynthio reply. Add your real Gemini key from https://aistudio.google.com/apikey for live AI responses.",

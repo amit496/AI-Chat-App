@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\PublicStorageUrl;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -108,9 +109,7 @@ class AuthController extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'profile_image' => $user->profile_image
-                ? Storage::disk('public')->url($user->profile_image)
-                : null,
+            'profile_image' => PublicStorageUrl::for($user->profile_image),
             'firebase_uid' => $user->firebase_uid,
         ];
     }

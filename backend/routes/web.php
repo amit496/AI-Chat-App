@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => view('home', ['title' => config('app.name')]))->name('home');
+/*
+| Storefront (user website)
+| React: resources/js/Pages/Storefront/
+| View: resources/views/storefront/
+*/
+Route::get('/', fn () => view('storefront.home', ['title' => config('app.name')]))->name('home');
 
-Route::get('/admin', fn () => view('admin'))->name('admin');
+require __DIR__.'/admin/web.php';

@@ -8,9 +8,10 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/css/app.css',
-                'resources/js/app.jsx',
+                'resources/css/admin.css',
                 'resources/js/admin.jsx',
+                'resources/css/storefront.css',
+                'resources/js/storefront.jsx',
             ],
             refresh: true,
             fonts: [
@@ -22,9 +23,4 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],
-    server: {
-        watch: {
-            ignored: ['**/storage/framework/views/**'],
-        },
-    },
 });

@@ -7,72 +7,48 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: BrandConfig.surface,
+      scaffoldBackgroundColor: BrandConfig.lightBg,
       colorScheme: const ColorScheme.light(
-        primary: BrandConfig.primary,
+        primary: BrandConfig.accent,
         onPrimary: Colors.white,
-        secondary: BrandConfig.primaryLight,
-        onSecondary: BrandConfig.textPrimary,
-        surface: BrandConfig.surfaceCard,
-        onSurface: BrandConfig.textPrimary,
-        outline: BrandConfig.border,
+        surface: BrandConfig.lightSurface,
+        onSurface: BrandConfig.lightText,
+        outline: BrandConfig.lightBorder,
       ),
-      textTheme: const TextTheme(
-        bodyLarge: TextStyle(color: BrandConfig.textPrimary),
-        bodyMedium: TextStyle(color: BrandConfig.textSecondary),
-        headlineMedium: TextStyle(
-          color: BrandConfig.textPrimary,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      dividerColor: BrandConfig.lightBorder,
       appBarTheme: const AppBarTheme(
         elevation: 0,
         scrolledUnderElevation: 0,
-        backgroundColor: BrandConfig.surface,
-        foregroundColor: BrandConfig.textPrimary,
+        backgroundColor: BrandConfig.lightBg,
+        foregroundColor: BrandConfig.lightText,
+        centerTitle: true,
+      ),
+      drawerTheme: const DrawerThemeData(
+        backgroundColor: BrandConfig.sidebarBg,
+        surfaceTintColor: Colors.transparent,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: BrandConfig.surfaceCard,
+        fillColor: BrandConfig.lightSurface,
+        hintStyle: const TextStyle(color: BrandConfig.lightTextMuted),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: BrandConfig.border),
+          borderRadius: BorderRadius.circular(26),
+          borderSide: BorderSide.none,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: BrandConfig.border),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: BrandConfig.primary, width: 1.5),
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: BrandConfig.primary,
+          backgroundColor: BrandConfig.accent,
           foregroundColor: Colors.white,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       ),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: BrandConfig.textPrimary,
-          side: const BorderSide(color: BrandConfig.border),
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        ),
+      listTileTheme: const ListTileThemeData(
+        iconColor: BrandConfig.sidebarText,
+        textColor: BrandConfig.sidebarText,
       ),
-      cardTheme: CardThemeData(
-        elevation: 0,
-        color: BrandConfig.surfaceCard,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: BrandConfig.border),
-        ),
-      ),
-      dividerColor: BrandConfig.border,
     );
   }
 
@@ -80,29 +56,59 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: const Color(0xFF1C1F26),
+      scaffoldBackgroundColor: BrandConfig.darkBg,
       colorScheme: const ColorScheme.dark(
-        primary: Color(0xFF9AA8C7),
-        onPrimary: Color(0xFF1C1F26),
-        surface: Color(0xFF262A33),
-        onSurface: Color(0xFFE8EAEF),
-        outline: Color(0xFF3A3F4B),
+        primary: BrandConfig.accent,
+        onPrimary: Colors.white,
+        surface: BrandConfig.darkSurface,
+        onSurface: BrandConfig.darkText,
+        outline: BrandConfig.darkBorder,
       ),
+      dividerColor: BrandConfig.darkBorder,
       appBarTheme: const AppBarTheme(
         elevation: 0,
-        backgroundColor: Color(0xFF1C1F26),
-        foregroundColor: Color(0xFFE8EAEF),
+        backgroundColor: BrandConfig.darkBg,
+        foregroundColor: BrandConfig.darkText,
+        centerTitle: true,
+      ),
+      drawerTheme: const DrawerThemeData(
+        backgroundColor: BrandConfig.sidebarBg,
+        surfaceTintColor: Colors.transparent,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF262A33),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+        fillColor: BrandConfig.darkSurface,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(26),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       ),
-      cardTheme: CardThemeData(
-        elevation: 0,
-        color: const Color(0xFF262A33),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: BrandConfig.accent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
       ),
     );
   }
+
+  static bool isDark(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark;
+
+  static Color chatBackground(BuildContext context) =>
+      isDark(context) ? BrandConfig.darkBg : BrandConfig.lightBg;
+
+  static Color userBubble(BuildContext context) =>
+      isDark(context) ? BrandConfig.userBubbleDark : BrandConfig.userBubbleLight;
+
+  static Color textPrimary(BuildContext context) =>
+      isDark(context) ? BrandConfig.darkText : BrandConfig.lightText;
+
+  static Color textMuted(BuildContext context) =>
+      isDark(context) ? BrandConfig.darkTextMuted : BrandConfig.lightTextMuted;
+
+  static Color inputFill(BuildContext context) =>
+      isDark(context) ? BrandConfig.darkSurface : BrandConfig.lightSurface;
 }

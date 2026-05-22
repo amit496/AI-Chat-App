@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Support\PublicStorageUrl;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,9 +19,7 @@ class ProfileController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'profile_image' => $user->profile_image
-                    ? Storage::disk('public')->url($user->profile_image)
-                    : null,
+                'profile_image' => PublicStorageUrl::for($user->profile_image),
             ],
         ]);
     }
@@ -63,9 +62,7 @@ class ProfileController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'profile_image' => $user->profile_image
-                    ? Storage::disk('public')->url($user->profile_image)
-                    : null,
+                'profile_image' => PublicStorageUrl::for($user->profile_image),
             ],
         ]);
     }

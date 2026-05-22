@@ -9,12 +9,13 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        Admin::updateOrCreate(
+        $admin = Admin::updateOrCreate(
             ['email' => 'admin@zynthio.test'],
-            [
-                'name' => 'Zynthio Admin',
-                'password' => 'password',
-            ]
+            ['name' => 'Zynthio Admin'],
         );
+
+        // Always reset password so login works (admin@zynthio.test / password)
+        $admin->password = 'password';
+        $admin->save();
     }
 }

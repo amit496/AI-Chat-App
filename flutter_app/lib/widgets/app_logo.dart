@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../core/constants/app_strings.dart';
 import '../core/constants/brand_config.dart';
+import '../core/theme/app_theme.dart';
+import 'brand_logo.dart';
 
 enum LogoSize { small, medium, large, hero }
 
@@ -10,10 +12,12 @@ class AppLogo extends StatelessWidget {
     super.key,
     this.size = LogoSize.medium,
     this.showName = true,
+    this.inSidebar = false,
   });
 
   final LogoSize size;
   final bool showName;
+  final bool inSidebar;
 
   double get _imageSize => switch (size) {
         LogoSize.small => 32,
@@ -22,44 +26,27 @@ class AppLogo extends StatelessWidget {
         LogoSize.hero => 120,
       };
 
-  TextStyle? _titleStyle(BuildContext context) => switch (size) {
-        LogoSize.small => Theme.of(context).textTheme.titleMedium,
-        LogoSize.medium => Theme.of(context).textTheme.titleLarge,
-        LogoSize.large => Theme.of(context).textTheme.headlineSmall,
-        LogoSize.hero => Theme.of(context).textTheme.headlineMedium,
-      };
-
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(_imageSize * 0.24),
-            boxShadow: [
-              BoxShadow(
-                color: BrandConfig.primary.withValues(alpha: 0.18),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(_imageSize * 0.24),
-            child: Image.asset(
-              BrandConfig.logoAsset,
-              width: _imageSize,
-              height: _imageSize,
-              fit: BoxFit.cover,
-            ),
-          ),
+        BrandLogo(
+          size: _imageSize,
+          variant: inSidebar
+              ? LogoVariant.sidebar
+              : BrandLogo.variantFor(context),
         ),
         if (showName) ...[
           SizedBox(height: size == LogoSize.hero ? 16 : 8),
           Text(
             AppStrings.appName,
-            style: _titleStyle(context)?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: inSidebar
+                      ? BrandConfig.sidebarText
+                      : AppTheme.textPrimary(context),
+                ),
           ),
         ],
       ],

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/constants/app_strings.dart';
+import '../../core/constants/brand_config.dart';
+import '../../core/theme/app_theme.dart';
+import '../../widgets/brand_logo.dart';
 import '../../providers/auth_provider.dart';
 import '../../routes/app_routes.dart';
-import '../../widgets/app_logo.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -43,93 +44,113 @@ class _LoginScreenState extends State<LoginScreen> {
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
-      body: SafeArea(
+      backgroundColor: AppTheme.chatBackground(context),
+      body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 24),
-                const AppLogo(size: LogoSize.large),
-                const SizedBox(height: 24),
-                Text(
-                  'Welcome back',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Text('Sign in to continue with ${AppStrings.appName}'),
-                const SizedBox(height: 32),
-                TextFormField(
-                  controller: _email,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (v) => v != null && v.contains('@') ? null : 'Enter a valid email',
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _password,
-                  obscureText: _obscure,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    suffixIcon: IconButton(
-                      icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
-                      onPressed: () => setState(() => _obscure = !_obscure),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  BrandLogo(
+                    size: 56,
+                    variant: BrandLogo.variantFor(context),
+                    borderRadius: 14,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Welcome to ${BrandConfig.appName}',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary(context),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Sign in to continue',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppTheme.textMuted(context)),
+                  ),
+                  const SizedBox(height: 32),
+                  TextFormField(
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: 'Email address',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (v) => v != null && v.contains('@') ? null : 'Enter a valid email',
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _password,
+                    obscureText: _obscure,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                        onPressed: () => setState(() => _obscure = !_obscure),
+                      ),
+                    ),
+                    validator: (v) => v != null && v.length >= 8 ? null : 'Min 8 characters',
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => Navigator.pushNamed(context, AppRoutes.forgotPassword),
+                      child: const Text('Forgot password?'),
                     ),
                   ),
-                  validator: (v) => v != null && v.length >= 8 ? null : 'Min 8 characters',
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => Navigator.pushNamed(context, AppRoutes.forgotPassword),
-                    child: const Text('Forgot password?'),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                FilledButton(
-                  onPressed: auth.isLoading ? null : _submit,
-                  child: auth.isLoading
-                      ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2))
-                      : const Text('Login'),
-                ),
-                const SizedBox(height: 16),
-                OutlinedButton.icon(
-                  onPressed: auth.isLoading
-                      ? null
-                      : () async {
-                          final ok = await auth.loginWithGoogle();
-                          if (!mounted) return;
-                          if (ok) {
-                            Navigator.pushReplacementNamed(context, AppRoutes.home);
-                          } else if (auth.error != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(auth.error!)));
-                          }
-                        },
-                  icon: const Icon(Icons.g_mobiledata, size: 28),
-                  label: const Text('Continue with Google'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: auth.isLoading
-                      ? null
-                      : () => Navigator.pushNamed(context, AppRoutes.otpLogin),
-                  icon: const Icon(Icons.sms_outlined),
-                  label: const Text('Login with OTP'),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account?"),
-                    TextButton(
-                      onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.register),
-                      child: const Text('Register'),
+                  const SizedBox(height: 8),
+                  FilledButton(
+                    onPressed: auth.isLoading ? null : _submit,
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(48),
+                      backgroundColor: BrandConfig.accent,
                     ),
-                  ],
-                ),
-              ],
+                    child: auth.isLoading
+                        ? const SizedBox(
+                            height: 22,
+                            width: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          )
+                        : const Text('Continue'),
+                  ),
+                  const SizedBox(height: 16),
+                  OutlinedButton(
+                    onPressed: auth.isLoading
+                        ? null
+                        : () async {
+                            final ok = await auth.loginWithGoogle();
+                            if (!mounted) return;
+                            if (ok) {
+                              Navigator.pushReplacementNamed(context, AppRoutes.home);
+                            } else if (auth.error != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(auth.error!)));
+                            }
+                          },
+                    style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                    child: const Text('Continue with Google'),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Don't have an account?", style: TextStyle(color: AppTheme.textMuted(context))),
+                      TextButton(
+                        onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.register),
+                        child: const Text('Sign up'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

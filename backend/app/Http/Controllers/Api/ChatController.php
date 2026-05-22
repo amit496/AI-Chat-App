@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
+use App\Support\PublicStorageUrl;
 use App\Models\Message;
 use App\Services\GeminiService;
 use Illuminate\Http\JsonResponse;
@@ -73,9 +74,11 @@ class ChatController extends Controller
         } catch (\Throwable $e) {
             $this->gemini->logError($user->id, '/api/send-message', $e->getMessage());
 
+            $detail = $e->getMessage();
+
             return response()->json([
-                'message' => 'Something went wrong',
-                'error' => config('app.debug') ? $e->getMessage() : null,
+                'message' => config('app.debug') ? $detail : 'Something went wrong',
+                'error' => config('app.debug') ? $detail : null,
             ], 502);
         }
 
@@ -145,9 +148,7 @@ class ChatController extends Controller
             'id' => $message->id,
             'sender_type' => $message->sender_type,
             'message' => $message->message,
-            'image_url' => $message->image_path
-                ? Storage::disk('public')->url($message->image_path)
-                : null,
+            'image_url' => PublicStorageUrl::for($message->image_path),
             'created_at' => $message->created_at,
         ];
     }

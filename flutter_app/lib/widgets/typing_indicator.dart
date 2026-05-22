@@ -1,33 +1,53 @@
 import 'package:flutter/material.dart';
 
-import '../core/constants/app_strings.dart';
-import 'loading_dots.dart';
+import '../core/theme/app_theme.dart';
+import 'brand_logo.dart';
 
-class TypingIndicator extends StatelessWidget {
+class TypingIndicator extends StatefulWidget {
   const TypingIndicator({super.key});
 
   @override
+  State<TypingIndicator> createState() => _TypingIndicatorState();
+}
+
+class _TypingIndicatorState extends State<TypingIndicator> with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulse = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))
+      ..repeat();
+  }
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(left: 16, bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              AppStrings.loading,
-              style: Theme.of(context).textTheme.bodySmall,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BrandLogo(
+            size: 28,
+            variant: BrandLogo.variantFor(context),
+          ),
+          const SizedBox(width: 12),
+          FadeTransition(
+            opacity: Tween(begin: 0.4, end: 1.0).animate(
+              CurvedAnimation(parent: _pulse, curve: Curves.easeInOut),
             ),
-            const SizedBox(width: 8),
-            const LoadingDots(),
-          ],
-        ),
+            child: Text(
+              'Zynthio is thinking…',
+              style: TextStyle(color: AppTheme.textMuted(context), fontSize: 14),
+            ),
+          ),
+        ],
       ),
     );
   }
