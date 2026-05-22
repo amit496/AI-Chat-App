@@ -1,64 +1,28 @@
-# NovaAI — AI Chat App
+# Voxera — AI Chat App
 
-> **Dummy API keys** are in `backend/.env` for local run. Replace `GEMINI_API_KEY` with your real key from [Google AI Studio](https://aistudio.google.com/apikey).
+Original portfolio brand. Flutter + Laravel + Gemini.
 
-## Branding / Logo
+| Item | Value |
+|------|--------|
+| **App name** | Voxera |
+| **Tagline** | Speak. Chat. Create. |
+| **Theme** | Indigo |
+| **Admin** | `admin@voxera.test` / `password` |
 
-- Shared logo: `flutter_app/assets/logo/logo.png`
-- Flutter: `AppLogo` widget on every screen (splash, onboarding, auth, home, chat, settings)
-- Web admin: `/logo.png` on home + React admin (`/admin`)
-
-## Project structure
-
-```text
-flutter_app/     # NovaAI mobile app (Flutter)
-backend/         # Laravel API + React admin (Blade + Vite)
-screenshots/     # Portfolio screenshots
-```
-
-## Quick start
-
-### Backend (Laravel + React views)
+## Run
 
 ```bash
-cd backend
-cp .env.example .env
-# Add GEMINI_API_KEY from https://aistudio.google.com/apikey
-composer install
-php artisan key:generate
-php artisan migrate --seed
-php artisan storage:link
-npm install && npm run build
-php artisan serve
+# Backend
+cd backend && php artisan config:clear && php artisan serve --port=8081
+
+# Flutter
+cd flutter_app && flutter clean && flutter pub get && flutter run
 ```
 
-- Home (React): http://127.0.0.1:8000/
-- Admin (React in Blade): http://127.0.0.1:8000/admin
-- API base: http://127.0.0.1:8000/api
+Admin: http://127.0.0.1:8081/admin
 
-Admin login: `admin@novaai.test` / `password` (run `php artisan db:seed` if missing)
+## Docs
 
-Dev with hot reload: `npm run dev` + `php artisan serve`
-
-### Flutter app
-
-```bash
-cd flutter_app
-flutter pub get
-flutter run
-# Android emulator:
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000/api
-```
-
-## Laravel + React setup
-
-React components live in `backend/resources/js/`:
-
-- `app.jsx` → mounted in `resources/views/home.blade.php`
-- `admin.jsx` → mounted in `resources/views/admin.blade.php`
-
-Blade layouts use `@vite()` to load React bundles.
-
-## Tech stack
-
-Flutter · Laravel · Sanctum · Gemini API · Firebase Auth (optional) · SQLite
+- [Firebase](docs/FIREBASE_SETUP.md)
+- [Deploy](docs/DEPLOY.md)
+- [Rebrand](docs/REBRAND.md)

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: novaai-api
+    name: voxera-api
     runtime: php
     plan: free
     rootDir: backend

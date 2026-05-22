@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
+import '../core/constants/brand_config.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
@@ -113,7 +115,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                     minLines: 1,
                     maxLines: 4,
                     decoration: InputDecoration(
-                      hintText: 'Ask NovaAI anything...',
+                      hintText: BrandConfig.chatHint,
                       filled: true,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

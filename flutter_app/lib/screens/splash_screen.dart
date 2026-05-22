@@ -5,6 +5,7 @@ import '../core/constants/app_strings.dart';
 import '../providers/auth_provider.dart';
 import '../routes/app_routes.dart';
 import '../services/storage_service.dart';
+import '../core/constants/brand_config.dart';
 import '../widgets/app_logo.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -57,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             children: [
               const AppLogo(size: LogoSize.hero, showName: true),
               const SizedBox(height: 8),
-              Text('AI Chat — Free tier stack', style: Theme.of(context).textTheme.bodyMedium),
+              Text(BrandConfig.tagline, style: Theme.of(context).textTheme.bodyMedium),
               const SizedBox(height: 32),
               const CircularProgressIndicator(),
             ],

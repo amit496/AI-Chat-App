@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
-import '../core/config/app_config.dart';
 import '../models/user_model.dart';
 import '../services/api_client.dart';
+import '../firebase_options.dart';
 import '../services/auth_service.dart';
+import '../services/firebase_auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   AuthProvider({AuthService? authService}) : _auth = authService ?? AuthService();
@@ -55,9 +56,21 @@ class AuthProvider extends ChangeNotifier {
         ));
   }
 
-  Future<bool> loginWithFirebase() async {
-    if (!AppConfig.firebaseConfigured) {
-      _error = 'Add Firebase config (free Spark plan). See README.';
+  Future<bool> loginWithGoogle() async {
+    if (!DefaultFirebaseOptions.isConfigured) {
+      _error = 'Firebase not configured. See docs/FIREBASE_SETUP.md';
+      notifyListeners();
+      return false;
+    }
+    return _runFirebase(() async {
+      await FirebaseAuthService().signInWithGoogle();
+      return (await _auth.fetchProfile())!;
+    });
+  }
+
+  Future<bool> sendOtp(String phone) async {
+    if (!DefaultFirebaseOptions.isConfigured) {
+      _error = 'Firebase not configured. See docs/FIREBASE_SETUP.md';
       notifyListeners();
       return false;
     }
@@ -65,8 +78,33 @@ class AuthProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      final credential = await FirebaseAuth.instance.signInAnonymously();
-      _user = await _auth.firebaseSync(credential.user!);
+      await FirebaseAuthService().sendOtp(phone);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      _error = e.message;
+      return false;
+    } catch (_) {
+      _error = 'Something went wrong';
+      return false;
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> verifyOtp(String code) async {
+    return _runFirebase(() async {
+      await FirebaseAuthService().verifyOtp(code);
+      return (await _auth.fetchProfile())!;
+    });
+  }
+
+  Future<bool> _runFirebase(Future<UserModel> Function() action) async {
+    _loading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      _user = await action();
       return true;
     } on FirebaseAuthException catch (e) {
       _error = e.message ?? 'Authentication failed.';

@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'core/config/app_config.dart';
 import 'core/constants/app_strings.dart';
+import 'firebase_options.dart';
 import 'core/theme/app_theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/chat_provider.dart';
@@ -11,6 +11,7 @@ import 'providers/theme_provider.dart';
 import 'routes/app_routes.dart';
 import 'screens/auth/forgot_password_screen.dart';
 import 'screens/auth/login_screen.dart';
+import 'screens/auth/otp_login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/chat/chat_screen.dart';
 import 'screens/home/home_screen.dart';
@@ -22,8 +23,8 @@ import 'screens/splash_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (AppConfig.firebaseConfigured) {
-    await Firebase.initializeApp();
+  if (DefaultFirebaseOptions.isConfigured) {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   }
 
   runApp(const NovaApp());
@@ -55,6 +56,7 @@ class NovaApp extends StatelessWidget {
               AppRoutes.login: (_) => const LoginScreen(),
               AppRoutes.register: (_) => const RegisterScreen(),
               AppRoutes.forgotPassword: (_) => const ForgotPasswordScreen(),
+              AppRoutes.otpLogin: (_) => const OtpLoginScreen(),
               AppRoutes.home: (_) => const HomeScreen(),
               AppRoutes.chat: (_) => const ChatScreen(),
               AppRoutes.profile: (_) => const ProfileScreen(),

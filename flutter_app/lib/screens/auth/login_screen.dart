@@ -95,11 +95,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       : const Text('Login'),
                 ),
                 const SizedBox(height: 16),
-                OutlinedButton(
+                OutlinedButton.icon(
                   onPressed: auth.isLoading
                       ? null
                       : () async {
-                          final ok = await auth.loginWithFirebase();
+                          final ok = await auth.loginWithGoogle();
                           if (!mounted) return;
                           if (ok) {
                             Navigator.pushReplacementNamed(context, AppRoutes.home);
@@ -107,7 +107,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(auth.error!)));
                           }
                         },
-                  child: const Text('Quick sign-in (Firebase)'),
+                  icon: const Icon(Icons.g_mobiledata, size: 28),
+                  label: const Text('Continue with Google'),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: auth.isLoading
+                      ? null
+                      : () => Navigator.pushNamed(context, AppRoutes.otpLogin),
+                  icon: const Icon(Icons.sms_outlined),
+                  label: const Text('Login with OTP'),
                 ),
                 const SizedBox(height: 24),
                 Row(

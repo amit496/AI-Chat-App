@@ -1,8 +1,10 @@
+const brandName = () => window.__BRAND__?.name ?? 'App';
+
 export default function Welcome() {
     return (
         <div className="welcome">
-            <img src="/logo.png" alt="NovaAI" width="96" height="96" style={{ borderRadius: 20 }} />
-            <h1>NovaAI</h1>
+            <img src="/logo.png" alt={brandName()} width="96" height="96" style={{ borderRadius: 20 }} />
+            <h1>{brandName()}</h1>
             <p>AI Chat API — Laravel + React views</p>
             <ul>
                 <li>

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/constants/app_strings.dart';
+import '../core/constants/brand_config.dart';
 
 enum LogoSize { small, medium, large, hero }
 
@@ -36,7 +37,7 @@ class AppLogo extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(_imageSize * 0.22),
           child: Image.asset(
-            'assets/logo/logo.png',
+            BrandConfig.logoAsset,
             width: _imageSize,
             height: _imageSize,
             fit: BoxFit.cover,

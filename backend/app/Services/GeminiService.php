@@ -21,6 +21,10 @@ class GeminiService
             throw new \RuntimeException('Gemini API key is not configured.');
         }
 
+        if ($this->isDemoKey($apiKey)) {
+            return $this->demoResponse($userMessage);
+        }
+
         $contents = [];
 
         foreach ($history as $item) {
@@ -92,5 +96,21 @@ class GeminiService
             'message' => Str::limit($message, 1000),
             'context' => $context,
         ]);
+    }
+
+    private function isDemoKey(string $apiKey): bool
+    {
+        return str_contains($apiKey, 'Dummy') || str_contains($apiKey, 'REPLACE');
+    }
+
+    private function demoResponse(string $userMessage): array
+    {
+        $model = config('services.gemini.model', 'gemini-2.0-flash');
+
+        return [
+            'text' => "[Demo mode — replace GEMINI_API_KEY in .env]\n\nYou said: \"{$userMessage}\"\n\nThis is a sample Voxera reply. Add your real Gemini key from https://aistudio.google.com/apikey for live AI responses.",
+            'model' => $model.'-demo',
+            'usage' => ['promptTokenCount' => 0, 'candidatesTokenCount' => 0],
+        ];
     }
 }

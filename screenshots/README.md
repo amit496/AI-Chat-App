@@ -1,12 +1,19 @@
 # Screenshots
 
-Add portfolio screenshots here before publishing:
+Placeholder images are included so README/portfolio structure is ready.
 
-- `login.png`
-- `register.png`
-- `chat.png`
-- `dark-mode.png`
-- `settings.png`
-- `profile.png`
+**Replace with real app captures:**
 
-Run the Flutter app, capture screens, and link them from the root `README.md`.
+| File | Screen |
+|------|--------|
+| `login.png` | Login + Google + OTP buttons |
+| `register.png` | Register |
+| `chat.png` | AI chat conversation |
+| `dark-mode.png` | Chat or home in dark theme |
+| `settings.png` | Settings |
+| `profile.png` | Profile |
+
+```bash
+# After running the app, take screenshots and overwrite these files.
+flutter run
+```

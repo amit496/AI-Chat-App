@@ -1,6 +1,6 @@
 {
-    "name": "nova_ai_chat",
-    "short_name": "nova_ai_chat",
+    "name": "Voxera",
+    "short_name": "Voxera",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

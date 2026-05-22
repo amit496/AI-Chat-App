@@ -8,7 +8,7 @@
 PRODUCT_NAME = nova_ai_chat
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.novaai.novaAiChat
+PRODUCT_BUNDLE_IDENTIFIER = com.voxera.chat
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.novaai. All rights reserved.

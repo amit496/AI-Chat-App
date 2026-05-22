@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const API_BASE = '/api';
+const brandName = () => window.__BRAND__?.name ?? 'App';
 
 function getToken() {
     return localStorage.getItem('admin_token');
@@ -22,7 +23,7 @@ async function request(path, options = {}) {
 }
 
 function LoginForm({ onSuccess }) {
-    const [email, setEmail] = useState('admin@novaai.test');
+    const [email, setEmail] = useState('admin@voxera.test');
     const [password, setPassword] = useState('password');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -47,8 +48,8 @@ function LoginForm({ onSuccess }) {
 
     return (
         <form className="login-card" onSubmit={submit}>
-            <img src="/logo.png" alt="NovaAI" width="72" height="72" style={{ borderRadius: 16, alignSelf: 'center' }} />
-            <h1>NovaAI Admin</h1>
+            <img src="/logo.png" alt={brandName()} width="72" height="72" style={{ borderRadius: 16, alignSelf: 'center' }} />
+            <h1>{brandName()} Admin</h1>
             <p>Laravel Blade view + React component</p>
             <label>
                 Email
@@ -98,7 +99,7 @@ function Dashboard() {
         <div className="dashboard">
             <header className="dash-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <img src="/logo.png" alt="NovaAI" width="40" height="40" style={{ borderRadius: 10 }} />
+                    <img src="/logo.png" alt={brandName()} width="40" height="40" style={{ borderRadius: 10 }} />
                     <h1>Admin Dashboard</h1>
                 </div>
                 <button
