@@ -1,0 +1,114 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* React admin (Blade view: admin.blade.php) */
+.admin-body {
+    margin: 0;
+    background: #0f1117;
+    color: #e8eaed;
+    font-family: var(--font-sans);
+}
+
+.login-card,
+.dashboard {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+}
+
+.login-card {
+    max-width: 420px;
+    background: #1a1d27;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.login-card input {
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #0f1117;
+    color: inherit;
+}
+
+.login-card button,
+.dash-header button,
+.tabs button {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    background: #6c5ce7;
+    color: white;
+    font-weight: 600;
+}
+
+.dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin: 1rem 0;
+}
+
+.tabs button {
+    background: #2a2f3d;
+}
+
+.tabs button.active {
+    background: #6c5ce7;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.stat-card {
+    background: #1a1d27;
+    border-radius: 14px;
+    padding: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1a1d27;
+    border-radius: 12px;
+}
+
+th,
+td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #2a2f3d;
+}
+
+.error {
+    color: #ff6b6b;
+}
+
+.welcome {
+    max-width: 640px;
+    margin: 4rem auto;
+    padding: 2rem;
+    text-align: center;
+}

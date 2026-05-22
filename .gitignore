@@ -1,0 +1,5 @@
+.DS_Store
+*.backup
+flutter_app_backup/
+backend_backup/
+admin_panel/
